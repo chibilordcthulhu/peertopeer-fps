@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://djrrei0bsatm0"]
+
+[ext_resource type="Script" uid="uid://djcxdimtox2n8" path="res://init_weapon.gd" id="1_emy16"]
+[ext_resource type="Resource" uid="uid://dqhe6xky3vkpv" path="res://weapons/Shotgun/shotgun.tres" id="2_1hahc"]
+
+[node name="init_weapon" type="Node"]
+script = ExtResource("1_emy16")
+WEAPON_TYPE = ExtResource("2_1hahc")
