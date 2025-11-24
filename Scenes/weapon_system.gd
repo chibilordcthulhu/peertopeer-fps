@@ -6,7 +6,7 @@ extends Node
 
 var current_weapon : Weapon
 
-
+@rpc("authority")
 func player_ready():
 	set_multiplayer_authority(str(name).to_int())
 	if parent.name == "Player":
@@ -14,6 +14,7 @@ func player_ready():
 		print("hi")
 		
 
+@rpc("authority")
 func shoot():
 	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
@@ -64,6 +65,8 @@ func shoot():
 					Global.spawned_decals[0].queue_free() #remove oldest decal
 					Global.spawned_decals.remove_at(0) #removed freed decal from list
 			
+			
+@rpc("authority")
 func get_bullet_raycast():
 	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
@@ -101,6 +104,7 @@ func get_bullet_raycast():
 	
 	
 #reload
+@rpc("authority")
 func reload():
 	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
@@ -121,6 +125,7 @@ func reload():
 					return
 	
 	
+@rpc("authority")
 func player_reload():
 	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
@@ -145,7 +150,7 @@ func player_reload():
 	
 	
 	
-	
+@rpc("authority")
 func _on_cooldown_timer_timeout() -> void:
 	if not is_multiplayer_authority(): return
 	parent.can_attack = true

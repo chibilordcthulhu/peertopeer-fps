@@ -47,7 +47,7 @@ func _ready():
 	#Update and Connect Player UI
 	Global.update_hud.emit()
 	#call weapon system ready
-	weapon_system.player_ready()
+	weapon_system.player_ready.rpc()
 	
 #camera look
 func _unhandled_input(event):
@@ -59,12 +59,12 @@ func _unhandled_input(event):
 		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 		
 	if  event.is_action_pressed("reload"):
-		weapon_system.reload()
+		weapon_system.reload.rpc()
 		
 	if event.is_action_pressed("weapon1") and is_reloading == false:
-		switch_weapon(SHOTGUN)
+		switch_weapon.rpc(SHOTGUN)
 	if event.is_action_pressed("weapon2") and is_reloading == false:
-		switch_weapon(AUTORIFLE)
+		switch_weapon.rpc(AUTORIFLE)
 	
 	
 #movement
@@ -73,11 +73,10 @@ func _physics_process(delta: float) -> void:
 	#Weapon
 	#Semi-Automatic
 	if Input.is_action_just_pressed("attack") and current_weapon.automatic == false:
-		weapon_system.shoot()
+		weapon_system.shoot.rpc("authority")
 	#Automatic
 	if Input.is_action_pressed("attack") and current_weapon.automatic != false:
-		print(current_weapon)
-		weapon_system.shoot()
+		weapon_system.shoot.rpc()
 	
 	
 	
@@ -107,6 +106,7 @@ func _physics_process(delta: float) -> void:
 
 
 #Player Actions
+@rpc("authority")
 func switch_weapon(new_weapon : Weapon):
 	if new_weapon == current_weapon:
 		return #do nothing
