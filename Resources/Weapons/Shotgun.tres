@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=5 format=3 uid="uid://c7hd4n6uvbrqw"]
+
+[ext_resource type="AudioStream" uid="uid://0fk4qktm85x6" path="res://Sound Effects/Guns/shot_dry.wav" id="1_xoemm"]
+[ext_resource type="Script" uid="uid://ci3c7xot4b5vj" path="res://Resources/Weapon_Resource.gd" id="2_h2rcs"]
+[ext_resource type="AudioStream" uid="uid://ctswk1ff13uwm" path="res://Sound Effects/Guns/shot_shotgun.wav" id="2_im2l5"]
+[ext_resource type="AudioStream" uid="uid://devlarb1im2ix" path="res://Sound Effects/Guns/reload_shotgun_[cut_2sec].wav" id="3_im2l5"]
+
+[resource]
+script = ExtResource("2_h2rcs")
+type = 1
+ammo = "shotgun"
+cooldown = 0.5
+firing_sounds = Array[AudioStream]([ExtResource("2_im2l5")])
+reload_sound = ExtResource("3_im2l5")
+damage = 10
+spread = 2.25
+max_mag = 1
+bullet_ammount = 6
+metadata/_custom_type_script = "uid://ci3c7xot4b5vj"

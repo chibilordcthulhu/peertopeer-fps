@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dftmjr4oml3ry"
-path="res://.godot/imported/sheets2.png-3c92ac7c84327979cdaa7402d1f16a0d.ctex"
+uid="uid://dvyc227f46vwj"
+path="res://.godot/imported/shotgunreload.png-fe03cc73a4309d619a1c7104b39f86bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Weapons/Shotgun/sheets2.png"
-dest_files=["res://.godot/imported/sheets2.png-3c92ac7c84327979cdaa7402d1f16a0d.ctex"]
+source_file="res://Sprites/shotgunreload.png"
+dest_files=["res://.godot/imported/shotgunreload.png-fe03cc73a4309d619a1c7104b39f86bf.ctex"]
 
 [params]
 

@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://chhnbrqs37sac"]
+
+[ext_resource type="Script" uid="uid://de4dk1xssdj0s" path="res://Scripts/player.gd" id="1_4flbx"]
+[ext_resource type="PackedScene" uid="uid://b67raobt44pdv" path="res://Systems/weapon_system.tscn" id="2_6t5aa"]
+[ext_resource type="PackedScene" uid="uid://bjqnxaauxduyc" path="res://Scenes/hud.tscn" id="2_onrkg"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_onrkg"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i3pqv"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vgqql"]
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_4flbx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_onrkg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_i3pqv")
+
+[node name="WeaponSystem" parent="." node_paths=PackedStringArray("parent") instance=ExtResource("2_6t5aa")]
+parent = NodePath("..")
+
+[node name="Head" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5392259, 0)
+shape = SubResource("SphereShape3D_vgqql")
+disabled = true
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.023787975, 0)
+
+[node name="WeaponHUD" parent="Head/Camera3D" instance=ExtResource("2_onrkg")]
+
+[node name="Bullet_RayCast3" type="RayCast3D" parent="Head/Camera3D"]
+enabled = false
+target_position = Vector3(0, -1, -40)

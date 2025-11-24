@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://47cjwgcndv43"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ejlvl"]
+albedo_color = Color(0.08468992, 0.08468992, 0.08468992, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_mxrav"]
+material = SubResource("StandardMaterial3D_ejlvl")
+
+[node name="BulletDecal" type="Node3D" groups=["Decals"]]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.15, 0, 1.3113417e-08, 0, 0.15, 0, -1.3113417e-08, 0, -0.15, 0, 0, -0.01)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_mxrav")

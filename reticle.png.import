@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dftmjr4oml3ry"
-path="res://.godot/imported/sheets2.png-3c92ac7c84327979cdaa7402d1f16a0d.ctex"
+uid="uid://bbtf7lpxakt7m"
+path="res://.godot/imported/reticle.png-91e0567e176790df33bdf2f40f87d46a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Weapons/Shotgun/sheets2.png"
-dest_files=["res://.godot/imported/sheets2.png-3c92ac7c84327979cdaa7402d1f16a0d.ctex"]
+source_file="res://reticle.png"
+dest_files=["res://.godot/imported/reticle.png-91e0567e176790df33bdf2f40f87d46a.ctex"]
 
 [params]
 

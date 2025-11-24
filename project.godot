@@ -15,9 +15,18 @@ run/main_scene="uid://bbvyckrti6fbe"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SoundManager="*res://SoundManager.gd"
+Global="*res://Global.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/SpritesheetGenerator/plugin.cfg")
+
+[global_group]
+
+Decals=""
 
 [input]
 

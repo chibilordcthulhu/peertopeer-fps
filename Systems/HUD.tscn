@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bmi8b0i8un8on"]
+[gd_scene load_steps=3 format=3 uid="uid://c1118cqtdm1xd"]
 
-[ext_resource type="Script" uid="uid://cqtqn1jarb3y1" path="res://hud_UI.gd" id="1_k5de2"]
-[ext_resource type="Texture2D" uid="uid://bbtf7lpxakt7m" path="res://reticle.png" id="2_efote"]
+[ext_resource type="Texture2D" uid="uid://pqw4p130xr0g" path="res://UI/HUD/reticle.png" id="1_1fxo2"]
+[ext_resource type="Script" path="res://UI/HUD/hud.gd" id="1_f63ty"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_k5de2")
+script = ExtResource("1_f63ty")
 
 [node name="Reticle" type="TextureRect" parent="."]
 layout_mode = 1
@@ -25,7 +25,7 @@ offset_right = 1.0
 offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_efote")
+texture = ExtResource("1_1fxo2")
 expand_mode = 1
 stretch_mode = 5
 

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=8 format=3 uid="uid://fccsorg7n1ch"]
+
+[ext_resource type="AudioStream" uid="uid://0fk4qktm85x6" path="res://Sound Effects/Guns/shot_dry.wav" id="1_u5xbn"]
+[ext_resource type="AudioStream" uid="uid://dq23q280qxu1e" path="res://Sound Effects/Guns/shot_auto_rifle_1.wav" id="2_ibfs4"]
+[ext_resource type="Script" uid="uid://ci3c7xot4b5vj" path="res://Resources/Weapon_Resource.gd" id="2_ks438"]
+[ext_resource type="AudioStream" uid="uid://dff8my5yvxdtu" path="res://Sound Effects/Guns/shot_auto_rifle_2.wav" id="3_3344v"]
+[ext_resource type="AudioStream" uid="uid://b7lm3uj58eypn" path="res://Sound Effects/Guns/shot_auto_rifle_3.wav" id="4_olhjk"]
+[ext_resource type="AudioStream" uid="uid://dis3ik4pgfrt7" path="res://Sound Effects/Guns/shot_auto_rifle_4.wav" id="5_1tvfm"]
+[ext_resource type="AudioStream" uid="uid://w1ur43mismqf" path="res://Sound Effects/Guns/reload_auto_rifle.wav" id="6_ebsq1"]
+
+[resource]
+script = ExtResource("2_ks438")
+type = 2
+ammo = "autorifle"
+cooldown = 0.12
+automatic = true
+firing_sounds = Array[AudioStream]([ExtResource("2_ibfs4"), ExtResource("3_3344v"), ExtResource("4_olhjk"), ExtResource("5_1tvfm")])
+reload_sound = ExtResource("6_ebsq1")
+damage = 20
+spread = 1.0
+max_mag = 30
+bullet_range = 80
+metadata/_custom_type_script = "uid://ci3c7xot4b5vj"

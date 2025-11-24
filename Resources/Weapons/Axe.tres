@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=4 format=3 uid="uid://kxeplm5otxd2"]
+
+[ext_resource type="AudioStream" uid="uid://0fk4qktm85x6" path="res://Sound Effects/Guns/shot_dry.wav" id="1_cnvn0"]
+[ext_resource type="Script" uid="uid://ci3c7xot4b5vj" path="res://Resources/Weapon_Resource.gd" id="2_dnhs8"]
+[ext_resource type="AudioStream" uid="uid://tl7kvp8204ni" path="res://Sound Effects/melee_swing.mp3" id="2_ehqje"]
+
+[resource]
+script = ExtResource("2_dnhs8")
+ammo = "melee"
+cooldown = 0.15
+firing_sounds = Array[AudioStream]([ExtResource("2_ehqje")])
+damage = 35
+max_mag = 1
+bullet_range = 8
+metadata/_custom_type_script = "uid://ci3c7xot4b5vj"
