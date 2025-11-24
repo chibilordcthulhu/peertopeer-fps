@@ -8,14 +8,16 @@ var current_weapon : Weapon
 
 
 func player_ready():
+	set_multiplayer_authority(str(name).to_int())
 	if parent.name == "Player":
 		weapon_hud_anim.reload.connect(player_reload)
 		print("hi")
 		
-		
+
 func shoot():
+	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
-	print(current_weapon)
+	print("you shot")
 	
 	if parent.can_attack == true and parent.current_bullets > 0:
 		var valid_bullets : Array[Dictionary] = get_bullet_raycast()
@@ -63,6 +65,7 @@ func shoot():
 					Global.spawned_decals.remove_at(0) #removed freed decal from list
 			
 func get_bullet_raycast():
+	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
 	
 	var bullet_raycast = parent.bullet_raycast
@@ -99,6 +102,7 @@ func get_bullet_raycast():
 	
 #reload
 func reload():
+	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
 	
 	if current_weapon.type != Weapon.WeaponType.MELEE:
@@ -118,6 +122,7 @@ func reload():
 	
 	
 func player_reload():
+	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
 	
 	#ammo var
@@ -142,5 +147,6 @@ func player_reload():
 	
 	
 func _on_cooldown_timer_timeout() -> void:
+	if not is_multiplayer_authority(): return
 	parent.can_attack = true
 	

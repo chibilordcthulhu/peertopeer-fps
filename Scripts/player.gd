@@ -33,10 +33,17 @@ const SPEED = 10.0
 const JUMP_VELOCITY = 10.0
 	
 	
+func _enter_tree():
+	set_multiplayer_authority(str(name).to_int())
+	
+	
 #On ready
 func _ready():
+	if not is_multiplayer_authority(): return
 	#capture mouse to window
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	#check of camera is correct
+	camera.current = true
 	#Update and Connect Player UI
 	Global.update_hud.emit()
 	#call weapon system ready
@@ -44,6 +51,8 @@ func _ready():
 	
 #camera look
 func _unhandled_input(event):
+	if not is_multiplayer_authority(): return
+	
 	if event is InputEventMouseMotion:
 		rotate_y(-event.relative.x * .005)
 		camera.rotate_x(-event.relative.y * .005)
@@ -60,7 +69,7 @@ func _unhandled_input(event):
 	
 #movement
 func _physics_process(delta: float) -> void:
-	
+	if not is_multiplayer_authority(): return
 	#Weapon
 	#Semi-Automatic
 	if Input.is_action_just_pressed("attack") and current_weapon.automatic == false:

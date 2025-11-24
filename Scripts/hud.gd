@@ -9,6 +9,7 @@ signal reload
 
 
 func _ready():
+	if not is_multiplayer_authority(): return
 	var equiped_weapon = str(player.current_weapon.type)
 	$WeaponSprite.animation_finished.connect(_on_WeaponSprite_animation_finished)
 	$WeaponSprite.play(equiped_weapon + "_idle")
@@ -17,21 +18,25 @@ func _process(_delta):
 	pass
 	
 func play_walking_anim():
+	if not is_multiplayer_authority(): return
 	if is_reloading == false and is_attacking == false:
 		var equiped_weapon = str(player.current_weapon.type)
 		$WeaponSprite.play(equiped_weapon + "_walk")
 	
 func play_attack_anim():
+	if not is_multiplayer_authority(): return
 	var equiped_weapon = str(player.current_weapon.type)
 	$WeaponSprite.play(equiped_weapon + "_attack")
 	is_attacking = true
 	
 func play_reload_anim():
+	if not is_multiplayer_authority(): return
 	var equiped_weapon = str(player.current_weapon.type)
 	$WeaponSprite.play(equiped_weapon + "_reload")
 	is_reloading = true
 	
 func on_weapon_switch():
+	if not is_multiplayer_authority(): return
 	var equiped_weapon = str(player.current_weapon.type)
 	$WeaponSprite.play(equiped_weapon + "_idle")
 	
@@ -39,6 +44,7 @@ func on_weapon_switch():
 	
 	
 func _on_WeaponSprite_animation_finished():
+	if not is_multiplayer_authority(): return
 	var equiped_weapon = str(player.current_weapon.type)
 	
 	if $WeaponSprite.animation == equiped_weapon + "_reload":
