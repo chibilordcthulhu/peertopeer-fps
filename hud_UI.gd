@@ -5,10 +5,12 @@ extends Control
 
 
 func _ready() -> void:
+	if not is_multiplayer_authority(): return
 	Global.update_hud.connect(_on_update_hud)
 
 
 func _on_update_hud():
+	if not is_multiplayer_authority(): return
 	var player : CharacterBody3D = $".."
 	
 	#ammo count visibilty
@@ -19,3 +21,5 @@ func _on_update_hud():
 		
 	#Set Ammo Label
 	ammo_count_label.text = "%s / %s" % [player.current_bullets, player.ammo[player.current_weapon.ammo]]
+	health_count_label.text = "%s" % [player.health]
+	

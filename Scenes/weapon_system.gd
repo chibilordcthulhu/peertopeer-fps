@@ -6,19 +6,17 @@ extends Node
 
 var current_weapon : Weapon
 
-@rpc("authority")
+
 func player_ready():
-	set_multiplayer_authority(str(name).to_int())
-	if parent.name == "Player":
+	if not is_multiplayer_authority(): return
+	if parent.is_in_group("Players"):
 		weapon_hud_anim.reload.connect(player_reload)
-		print("hi")
 		
 
-@rpc("authority")
+@rpc("call_local")
 func shoot():
 	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
-	print("you shot")
 	
 	if parent.can_attack == true and parent.current_bullets > 0:
 		var valid_bullets : Array[Dictionary] = get_bullet_raycast()
@@ -33,7 +31,7 @@ func shoot():
 		SoundManager.play_sfx(current_weapon.firing_sounds.pick_random(),parent)
 		
 		#Player Only
-		if parent.name == "Player":
+		if parent.is_in_group("Players"):
 			Global.update_hud.emit()
 			weapon_hud_anim.play_attack_anim()
 			
@@ -42,7 +40,7 @@ func shoot():
 			for b in valid_bullets:
 				#Damage
 				if b.hit_target.is_in_group("Enemy"): #check if is enemy
-					b.hit_target.change_health(current_weapon.damage * -1) # do something to enemy (hurt)
+					b.hit_target.rpc("change_health", current_weapon.damage * -1)        #change_health(current_weapon.damage * -1) # do something to enemy (hurt)
 				
 				#Spawn Decal
 				var bullet = Global.BULLET_DECAL.instantiate()
@@ -66,7 +64,7 @@ func shoot():
 					Global.spawned_decals.remove_at(0) #removed freed decal from list
 			
 			
-@rpc("authority")
+			
 func get_bullet_raycast():
 	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
@@ -104,7 +102,7 @@ func get_bullet_raycast():
 	
 	
 #reload
-@rpc("authority")
+@rpc("call_local")
 func reload():
 	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
@@ -116,7 +114,7 @@ func reload():
 			parent.is_reloading = true
 			
 			#player only
-			if parent.name == "Player":
+			if parent.is_in_group("Players"):
 				if parent.ammo[current_weapon.ammo] > 0: #if player has ammo in inventory
 					#Sound Effect
 					SoundManager.play_sfx(current_weapon.reload_sound, parent)
@@ -125,7 +123,6 @@ func reload():
 					return
 	
 	
-@rpc("authority")
 func player_reload():
 	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
@@ -150,7 +147,6 @@ func player_reload():
 	
 	
 	
-@rpc("authority")
 func _on_cooldown_timer_timeout() -> void:
 	if not is_multiplayer_authority(): return
 	parent.can_attack = true

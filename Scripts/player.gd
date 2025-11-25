@@ -32,6 +32,8 @@ var ammo : Dictionary = {
 const SPEED = 10.0
 const JUMP_VELOCITY = 10.0
 	
+#stats
+var health : int = 100
 	
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
@@ -47,7 +49,7 @@ func _ready():
 	#Update and Connect Player UI
 	Global.update_hud.emit()
 	#call weapon system ready
-	weapon_system.player_ready.rpc()
+	weapon_system.player_ready()
 	
 #camera look
 func _unhandled_input(event):
@@ -59,12 +61,12 @@ func _unhandled_input(event):
 		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 		
 	if  event.is_action_pressed("reload"):
-		weapon_system.reload.rpc()
+		weapon_system.rpc("reload")
 		
 	if event.is_action_pressed("weapon1") and is_reloading == false:
-		switch_weapon.rpc(SHOTGUN)
+		rpc("switch_weapon", SHOTGUN)
 	if event.is_action_pressed("weapon2") and is_reloading == false:
-		switch_weapon.rpc(AUTORIFLE)
+		rpc("switch_weapon", AUTORIFLE)
 	
 	
 #movement
@@ -73,10 +75,10 @@ func _physics_process(delta: float) -> void:
 	#Weapon
 	#Semi-Automatic
 	if Input.is_action_just_pressed("attack") and current_weapon.automatic == false:
-		weapon_system.shoot.rpc("authority")
+		weapon_system.rpc("shoot")
 	#Automatic
 	if Input.is_action_pressed("attack") and current_weapon.automatic != false:
-		weapon_system.shoot.rpc()
+		weapon_system.rpc("shoot")
 	
 	
 	
@@ -106,7 +108,7 @@ func _physics_process(delta: float) -> void:
 
 
 #Player Actions
-@rpc("authority")
+@rpc("call_local")
 func switch_weapon(new_weapon : Weapon):
 	if new_weapon == current_weapon:
 		return #do nothing
@@ -123,3 +125,19 @@ func switch_weapon(new_weapon : Weapon):
 	Global.update_hud.emit()
 		
 	pass
+	
+
+#Receive Damage
+@rpc("any_peer")
+func change_health(damage):
+	var damage_taken = damage
+	var new_health = health + damage_taken
+	health = new_health
+	Global.update_hud.emit()
+	if  health == 0 or health < 0:
+		death()
+
+
+func death():
+	health = 100
+	position = Vector3.ZERO

@@ -23,6 +23,7 @@ func play_walking_anim():
 		var equiped_weapon = str(player.current_weapon.type)
 		$WeaponSprite.play(equiped_weapon + "_walk")
 	
+	
 func play_attack_anim():
 	if not is_multiplayer_authority(): return
 	var equiped_weapon = str(player.current_weapon.type)
@@ -53,9 +54,11 @@ func _on_WeaponSprite_animation_finished():
 		$WeaponSprite.play(equiped_weapon + "_idle")
 		
 	if $WeaponSprite.animation == equiped_weapon + "_attack":
-		is_attacking = true
+		is_attacking = false
 		$WeaponSprite.play(equiped_weapon + "_idle")
 		
+	else:
+		$WeaponSprite.play(equiped_weapon + "_idle")
 	
 	
 	
