@@ -3,6 +3,8 @@ extends Node
 @export var parent : CharacterBody3D
 @onready var cooldown_timer: Timer = $CooldownTimer
 @onready var weapon_hud_anim = $"../Head/Camera3D/WeaponHUD"
+@onready var recoil_system: Node = $"../Recoil System"
+
 
 var current_weapon : Weapon
 
@@ -32,6 +34,7 @@ func shoot():
 		
 		#Player Only
 		if parent.is_in_group("Players"):
+			recoil_system.apply_recoil(current_weapon)
 			Global.update_hud.emit()
 			weapon_hud_anim.play_attack_anim()
 			

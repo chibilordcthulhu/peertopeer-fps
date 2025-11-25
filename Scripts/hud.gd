@@ -10,6 +10,7 @@ signal reload
 
 func _ready():
 	if not is_multiplayer_authority(): return
+	visible = true
 	var equiped_weapon = str(player.current_weapon.type)
 	$WeaponSprite.animation_finished.connect(_on_WeaponSprite_animation_finished)
 	$WeaponSprite.play(equiped_weapon + "_idle")

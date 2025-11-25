@@ -12,6 +12,8 @@ enum WeaponType {
 @export var sprite : Texture2DArray
 @export var cooldown : float = 0.2 #time in seconds
 @export var automatic : bool = false
+@export var recoil_vertical := 0.03
+@export var recoil_horizontal := 0.015
 
 @export_category("Sounds")
 @export var firing_sounds : Array[AudioStream]
