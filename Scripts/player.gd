@@ -32,11 +32,21 @@ var ammo : Dictionary = {
 const SPEED = 10.0
 const JUMP_VELOCITY = 10.0
 	
+#stats
+var health : int = 100
+var is_dead : bool = false
+	
+func _enter_tree():
+	set_multiplayer_authority(str(name).to_int())
+	
 	
 #On ready
 func _ready():
+	if not is_multiplayer_authority(): return
 	#capture mouse to window
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	#check of camera is correct
+	camera.current = true
 	#Update and Connect Player UI
 	Global.update_hud.emit()
 	#call weapon system ready
@@ -44,13 +54,15 @@ func _ready():
 	
 #camera look
 func _unhandled_input(event):
+	if not is_multiplayer_authority(): return
+	
 	if event is InputEventMouseMotion:
 		rotate_y(-event.relative.x * .005)
 		camera.rotate_x(-event.relative.y * .005)
 		camera.rotation.x = clamp(camera.rotation.x, -PI/2, PI/2)
 		
 	if  event.is_action_pressed("reload"):
-		weapon_system.reload()
+		weapon_system.rpc("reload")
 		
 	if event.is_action_pressed("weapon1") and is_reloading == false:
 		switch_weapon(SHOTGUN)
@@ -60,14 +72,13 @@ func _unhandled_input(event):
 	
 #movement
 func _physics_process(delta: float) -> void:
-	
+	if not is_multiplayer_authority(): return
 	#Weapon
 	#Semi-Automatic
 	if Input.is_action_just_pressed("attack") and current_weapon.automatic == false:
 		weapon_system.shoot()
 	#Automatic
 	if Input.is_action_pressed("attack") and current_weapon.automatic != false:
-		print(current_weapon)
 		weapon_system.shoot()
 	
 	
@@ -85,7 +96,7 @@ func _physics_process(delta: float) -> void:
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
+	if direction and is_dead == false:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 		#call walking animation
@@ -114,3 +125,26 @@ func switch_weapon(new_weapon : Weapon):
 	Global.update_hud.emit()
 		
 	pass
+	
+
+#Receive Damage
+@rpc("any_peer")
+func change_health(damage):
+	var damage_taken = damage
+	var new_health = health + damage_taken
+	health = new_health
+	Global.update_hud.emit()
+	if  health == 0 or health < 0:
+		rpc("death")
+
+@rpc("call_local")
+func death():
+	is_dead = true
+	remove_from_group("Enemy")
+	position = Vector3.ZERO
+	Global.update_hud.emit()
+	await get_tree().create_timer(5).timeout
+	health = 100
+	add_to_group("Enemy")
+	is_dead = false
+	Global.update_hud.emit()

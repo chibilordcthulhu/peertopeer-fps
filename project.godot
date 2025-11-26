@@ -27,6 +27,8 @@ enabled=PackedStringArray("res://addons/SpritesheetGenerator/plugin.cfg")
 [global_group]
 
 Decals=""
+Enemy=""
+Players=""
 
 [input]
 

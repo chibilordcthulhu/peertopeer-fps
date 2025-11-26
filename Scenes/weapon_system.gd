@@ -3,19 +3,22 @@ extends Node
 @export var parent : CharacterBody3D
 @onready var cooldown_timer: Timer = $CooldownTimer
 @onready var weapon_hud_anim = $"../Head/Camera3D/WeaponHUD"
+@onready var recoil_system: Node = $"../Recoil System"
+
 
 var current_weapon : Weapon
 
 
 func player_ready():
-	if parent.name == "Player":
+	if not is_multiplayer_authority(): return
+	if parent.is_in_group("Players"):
 		weapon_hud_anim.reload.connect(player_reload)
-		print("hi")
 		
-		
+
+@rpc("call_local")
 func shoot():
+	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
-	print(current_weapon)
 	
 	if parent.can_attack == true and parent.current_bullets > 0:
 		var valid_bullets : Array[Dictionary] = get_bullet_raycast()
@@ -30,7 +33,8 @@ func shoot():
 		SoundManager.play_sfx(current_weapon.firing_sounds.pick_random(),parent)
 		
 		#Player Only
-		if parent.name == "Player":
+		if parent.is_in_group("Players"):
+			recoil_system.apply_recoil(current_weapon)
 			Global.update_hud.emit()
 			weapon_hud_anim.play_attack_anim()
 			
@@ -39,7 +43,7 @@ func shoot():
 			for b in valid_bullets:
 				#Damage
 				if b.hit_target.is_in_group("Enemy"): #check if is enemy
-					b.hit_target.change_health(current_weapon.damage * -1) # do something to enemy (hurt)
+					b.hit_target.rpc("change_health", current_weapon.damage * -1)        #change_health(current_weapon.damage * -1) # do something to enemy (hurt)
 				
 				#Spawn Decal
 				var bullet = Global.BULLET_DECAL.instantiate()
@@ -62,7 +66,10 @@ func shoot():
 					Global.spawned_decals[0].queue_free() #remove oldest decal
 					Global.spawned_decals.remove_at(0) #removed freed decal from list
 			
+			
+			
 func get_bullet_raycast():
+	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
 	
 	var bullet_raycast = parent.bullet_raycast
@@ -98,7 +105,9 @@ func get_bullet_raycast():
 	
 	
 #reload
+@rpc("call_local")
 func reload():
+	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
 	
 	if current_weapon.type != Weapon.WeaponType.MELEE:
@@ -108,7 +117,7 @@ func reload():
 			parent.is_reloading = true
 			
 			#player only
-			if parent.name == "Player":
+			if parent.is_in_group("Players"):
 				if parent.ammo[current_weapon.ammo] > 0: #if player has ammo in inventory
 					#Sound Effect
 					SoundManager.play_sfx(current_weapon.reload_sound, parent)
@@ -118,6 +127,7 @@ func reload():
 	
 	
 func player_reload():
+	if not is_multiplayer_authority(): return
 	current_weapon = parent.current_weapon
 	
 	#ammo var
@@ -140,7 +150,7 @@ func player_reload():
 	
 	
 	
-	
 func _on_cooldown_timer_timeout() -> void:
+	if not is_multiplayer_authority(): return
 	parent.can_attack = true
 	
