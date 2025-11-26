@@ -31,7 +31,7 @@ func _unhandled_input(_event):
 
 # --- HOSTING ---
 func _on_host_button_pressed() -> void:
-	main_menu.hide()
+	#main_menu.hide()
 
 	# create server and assign to multiplayer API
 	enet_peer.create_server(PORT)
@@ -40,14 +40,15 @@ func _on_host_button_pressed() -> void:
 	# always connect the signals so logic runs regardless of who hosts
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-
+	
+	# setup UPNP (best-effort)
+	await get_tree().create_timer(0.5).timeout
+	upnp_setup()
 	# the host must spawn its own player as well
 	if multiplayer.is_server():
+		main_menu.hide()
 		_on_peer_connected(multiplayer.get_unique_id())
-
-	# setup UPNP (best-effort)
-	upnp_setup()
-
+		
 # --- JOINING ---
 func _on_join_button_pressed() -> void:
 	main_menu.hide()
@@ -74,12 +75,8 @@ func _on_peer_connected(peer_id: int) -> void:
 	# Server spawns the player and assigns authority to the peer
 	var player = Player.instantiate()
 	player.name = str(peer_id)
-
-	# IMPORTANT: make the peer the authority for this player so input/ownership works
-	player.set_multiplayer_authority(peer_id)
-
 	# Add to the scene tree with RPC replication enabled (true)
-	add_child(player, true)
+	add_child(player)
 
 	print("Spawned player for peer:", peer_id)
 
@@ -98,6 +95,7 @@ func upnp_setup() -> void:
 	var upnp = UPNP.new()
 
 	var discover_result = upnp.discover()
+	print("UPNP discover result:", discover_result)
 	if discover_result != UPNP.UPNP_RESULT_SUCCESS:
 		printerr("UPNP DISCOVER FAILED! CODE: %s" % discover_result)
 		return
@@ -108,12 +106,13 @@ func upnp_setup() -> void:
 		return
 
 	var map_result = upnp.add_port_mapping(PORT)
+	print("UPNP add port mapping result:", map_result)
 	if map_result != UPNP.UPNP_RESULT_SUCCESS:
 		printerr("UPNP PORT MAPPING FAILED! CODE: %s" % map_result)
 		return
 
 	var ext = upnp.query_external_address()
-	print("UPNP success. External address: %s:%d" % [ext, PORT])
+	print("UPNP success. External address: %s" % [ext])
 
 # --- Utility: optional clean shutdown / leave match ---
 func leave_session() -> void:

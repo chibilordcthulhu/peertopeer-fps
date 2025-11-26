@@ -55,3 +55,14 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 30
 text = "100"
 horizontal_alignment = 1
+
+[node name="Dead" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 484.0
+offset_top = 176.0
+offset_right = 720.0
+offset_bottom = 215.0
+text = "YOU'RE DEAD BOZO"
+horizontal_alignment = 1
+vertical_alignment = 1

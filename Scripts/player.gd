@@ -34,6 +34,7 @@ const JUMP_VELOCITY = 10.0
 	
 #stats
 var health : int = 100
+var is_dead : bool = false
 	
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
@@ -64,9 +65,9 @@ func _unhandled_input(event):
 		weapon_system.rpc("reload")
 		
 	if event.is_action_pressed("weapon1") and is_reloading == false:
-		rpc("switch_weapon", SHOTGUN)
+		switch_weapon(SHOTGUN)
 	if event.is_action_pressed("weapon2") and is_reloading == false:
-		rpc("switch_weapon", AUTORIFLE)
+		switch_weapon(AUTORIFLE)
 	
 	
 #movement
@@ -75,10 +76,10 @@ func _physics_process(delta: float) -> void:
 	#Weapon
 	#Semi-Automatic
 	if Input.is_action_just_pressed("attack") and current_weapon.automatic == false:
-		weapon_system.rpc("shoot")
+		weapon_system.shoot()
 	#Automatic
 	if Input.is_action_pressed("attack") and current_weapon.automatic != false:
-		weapon_system.rpc("shoot")
+		weapon_system.shoot()
 	
 	
 	
@@ -95,7 +96,7 @@ func _physics_process(delta: float) -> void:
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
+	if direction and is_dead == false:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 		#call walking animation
@@ -108,7 +109,6 @@ func _physics_process(delta: float) -> void:
 
 
 #Player Actions
-@rpc("call_local")
 func switch_weapon(new_weapon : Weapon):
 	if new_weapon == current_weapon:
 		return #do nothing
@@ -135,9 +135,16 @@ func change_health(damage):
 	health = new_health
 	Global.update_hud.emit()
 	if  health == 0 or health < 0:
-		death()
+		rpc("death")
 
-
+@rpc("call_local")
 func death():
-	health = 100
+	is_dead = true
+	remove_from_group("Enemy")
 	position = Vector3.ZERO
+	Global.update_hud.emit()
+	await get_tree().create_timer(5).timeout
+	health = 100
+	add_to_group("Enemy")
+	is_dead = false
+	Global.update_hud.emit()
